@@ -39,6 +39,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 
+#include "spi.h"
+#include "gpio.h"
+
 /** @defgroup SD_IO_LINK_Exported_Constants Exported Constants
   * @{
   */
