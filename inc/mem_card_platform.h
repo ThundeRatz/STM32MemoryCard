@@ -51,26 +51,26 @@ void SPIx_CS_Low(mem_card_platform_t* pSetup);
 void SPIx_CS_High(mem_card_platform_t* pSetup);
 
 /**
-  * @brief  SPI Write a byte to device
-  *
-  * @param  pSetup: poiter to devide setup
-  * @param  DataIn: value to be written
-  * @param  DataOut: read value
-  * @param  DataLength: value data length
-  *
-  * @retval None
-  */
-void SPIx_WriteReadData(mem_card_platform_t* pSetup, const uint8_t *DataIn, uint8_t *DataOut, uint16_t DataLength);
+ * @brief  SPI Write a byte to device
+ *
+ * @param  pSetup: poiter to devide setup
+ * @param  DataIn: value to be written
+ * @param  DataOut: read value
+ * @param  DataLength: value data length
+ *
+ * @retval None
+ */
+void SPIx_WriteReadData(mem_card_platform_t* pSetup, const uint8_t* DataIn, uint8_t* DataOut, uint16_t DataLength);
 
 /**
-  * @brief  SPI Write an amount of data to device
-  *
-  * @param  pSetup: poiter to devide setup
-  * @param  DataIn: value to be written
-  * @param  DataLength: number of bytes to write
-  *
-  * @retval None
-  */
-void SPIx_WriteData(mem_card_platform_t* pSetup, uint8_t *DataIn, uint16_t DataLength);
+ * @brief  SPI Write an amount of data to device
+ *
+ * @param  pSetup: poiter to devide setup
+ * @param  DataIn: value to be written
+ * @param  DataLength: number of bytes to write
+ *
+ * @retval None
+ */
+void SPIx_WriteData(mem_card_platform_t* pSetup, uint8_t* DataIn, uint16_t DataLength);
 
 #endif // __MEM_CARD_PLATFORM_H__

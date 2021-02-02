@@ -16,10 +16,10 @@
  *****************************************/
 
 /**
-  * @brief  SPI error treatment function
-  *
-  * @retval None
-  */
+ * @brief  SPI error treatment function
+ *
+ * @retval None
+ */
 void SPIx_Error(mem_card_platform_t* pSetup);
 
 /*****************************************
@@ -34,25 +34,25 @@ void SPIx_CS_High(mem_card_platform_t* pSetup) {
     HAL_GPIO_WritePin(pSetup->cs_port, pSetup->cs_pin, GPIO_PIN_SET);
 }
 
-void SPIx_WriteReadData(mem_card_platform_t* pSetup, const uint8_t *DataIn, uint8_t *DataOut, uint16_t DataLength) {
+void SPIx_WriteReadData(mem_card_platform_t* pSetup, const uint8_t* DataIn, uint8_t* DataOut, uint16_t DataLength) {
     HAL_StatusTypeDef status = HAL_OK;
 
     status = HAL_SPI_TransmitReceive(pSetup->hspi, (uint8_t*) DataIn, DataOut, DataLength, pSetup->spi_timeout);
 
     /* Check the communication status */
-    if(status != HAL_OK) {
+    if (status != HAL_OK) {
         /* Execute user timeout callback */
         SPIx_Error(pSetup);
     }
 }
 
-void SPIx_WriteData(mem_card_platform_t* pSetup, uint8_t *DataIn, uint16_t DataLength) {
+void SPIx_WriteData(mem_card_platform_t* pSetup, uint8_t* DataIn, uint16_t DataLength) {
     HAL_StatusTypeDef status = HAL_OK;
 
     status = HAL_SPI_Transmit(pSetup->hspi, DataIn, DataLength, pSetup->spi_timeout);
 
     /* Check the communication status */
-    if(status != HAL_OK) {
+    if (status != HAL_OK) {
         /* Execute user timeout callback */
         SPIx_Error(pSetup);
     }
