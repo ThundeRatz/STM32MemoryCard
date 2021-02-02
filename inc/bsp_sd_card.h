@@ -4,6 +4,10 @@
   * @author  MCD Application Team
   * @brief   This file contains the common defines and functions prototypes for
   *          the bsp_sd_card.c driver.
+  *
+  * @note This file was modified by LucasHaug <lucas.haug@thunderat.org>, it's
+  *       original name was stm32_adafruit_sd.h
+  * 
   ******************************************************************************
   * @attention
   *

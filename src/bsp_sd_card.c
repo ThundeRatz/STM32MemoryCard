@@ -3,30 +3,11 @@
   * @file    bsp_sd_card.c
   * @author  MCD Application Team
   * @brief   This file provides a set of functions needed to manage the SD card
-  *          mounted on the Adafruit 1.8" TFT LCD shield (reference ID 802),
-  *          that is used with the STM32 Nucleo board through SPI interface.
-  *          It implements a high level communication layer for read and write
-  *          from/to this memory. The needed STM32XXxx hardware resources (SPI and
-  *          GPIO) are defined in stm32XXxx_nucleo.h file, and the initialization is
-  *          performed in SD_IO_Init() function declared in stm32XXxx_nucleo.c
-  *          file.
-  *          You can easily tailor this driver to any other development board,
-  *          by just adapting the defines for hardware resources and
-  *          SD_IO_Init() function.
+  *          through SPI interface.
   *
-  *          +-------------------------------------------------------+
-  *          |                     Pin assignment                    |
-  *          +-------------------------+---------------+-------------+
-  *          |  STM32XXxx SPI Pins     |     SD        |    Pin      |
-  *          +-------------------------+---------------+-------------+
-  *          | SD_SPI_CS_PIN           |   ChipSelect  |    1        |
-  *          | SD_SPI_MOSI_PIN / MOSI  |   DataIn      |    2        |
-  *          |                         |   GND         |    3 (0 V)  |
-  *          |                         |   VDD         |    4 (3.3 V)|
-  *          | SD_SPI_SCK_PIN / SCLK   |   Clock       |    5        |
-  *          |                         |   GND         |    6 (0 V)  |
-  *          | SD_SPI_MISO_PIN / MISO  |   DataOut     |    7        |
-  *          +-------------------------+---------------+-------------+
+  * @note This file was modified by LucasHaug <lucas.haug@thunderat.org>, it's
+  *       original name was stm32_adafruit_sd.c
+  *
   ******************************************************************************
   * @attention
   *
@@ -53,7 +34,7 @@
   + Initialization steps:
      o Initialize the micro SD card using the BSP_SD_Init() function.
      o Checking the SD card presence is not managed because SD detection pin is
-       not physically mapped on the Adafruit shield.
+       not physically mapped on the card module.
      o The function BSP_SD_GetCardInfo() is used to get the micro SD card information
        which is stored in the structure "SD_CardInfo".
 
@@ -272,7 +253,7 @@ uint8_t BSP_SD_Init(void)
   /* Configure IO functionalities for SD pin */
   SD_IO_Init();
 
-  /* SD detection pin is not physically mapped on the Adafruit shield */
+  /* SD detection pin is not physically mapped on the card module */
   SdStatus = SD_PRESENT;
 
   /* SD initialized and set to SPI mode properly */
