@@ -23,6 +23,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "sd_io_link.h"
+#include "mem_card_platform.h"
 
 /** @addtogroup BSP
   * @{
@@ -46,6 +47,21 @@
   * @}
   */
 
+/** @defgroup SD_IO_LINK_BUS BUS Constants
+  * @{
+  */
+
+/* Maximum Timeout values for flags waiting loops. These timeouts are not based
+   on accurate values, they just guarantee that the application will not remain
+   stuck if the SPI communication is corrupted.
+   You may modify these timeout values depending on CPU frequency and application
+   conditions (interrupts routines ...). */
+#define SPIx_TIMEOUT_MS                   1000U
+
+/**
+  * @}
+  */
+
 /** @defgroup SD_IO_LINK_Private_Variables Private Variables
   * @{
   */
@@ -55,8 +71,7 @@
  */
 
 #ifdef HAL_SPI_MODULE_ENABLED
-uint32_t SpixTimeout = NUCLEO_SPIx_TIMEOUT_MAX; /*<! Value of Timeout when SPI communication fails */
-static SPI_HandleTypeDef hnucleo_Spi;
+mem_card_platform_t card_setup;
 #endif /* HAL_SPI_MODULE_ENABLED */
 
 /**
@@ -67,12 +82,6 @@ static SPI_HandleTypeDef hnucleo_Spi;
   * @{
   */
 #ifdef HAL_SPI_MODULE_ENABLED
-static void               SPIx_Init(void);
-static void               SPIx_Write(uint8_t Value);
-static void               SPIx_WriteData(uint8_t *DataIn, uint16_t DataLength);
-static void               SPIx_WriteReadData(const uint8_t *DataIn, uint8_t *DataOut, uint16_t DataLegnth);
-static void               SPIx_Error (void);
-static void               SPIx_MspInit(void);
 
 /* SD IO functions */
 void                      SD_IO_Init(void);
@@ -83,7 +92,21 @@ void                      SD_IO_WriteData(const uint8_t *Data, uint16_t DataLeng
 uint8_t                   SD_IO_WriteByte(uint8_t Data);
 uint8_t                   SD_IO_ReadByte(void);
 
-#endif /* HAL_SPI_MODULE_ENABLED */
+/**
+  * @}
+  */
+
+ /** @defgroup SD_IO_LINK_Exported_Functions
+  * @{
+  */
+
+void mem_card_init(SPI_HandleTypeDef* hspi, GPIO_TypeDef* cs_port, uint16_t cs_pin) {
+    card_setup.cs_port = cs_port;
+    card_setup.cs_pin = cs_pin;
+    card_setup.hspi = hspi;
+    card_setup.spi_timeout = SPIx_TIMEOUT_MS;
+}
+
 /**
   * @}
   */
@@ -91,85 +114,6 @@ uint8_t                   SD_IO_ReadByte(void);
 /** @addtogroup SD_IO_LINK_Private_Functions
   * @{
   */
-
-#ifdef HAL_SPI_MODULE_ENABLED
-/******************************************************************************
-                            BUS OPERATIONS
-*******************************************************************************/
-
-/**
-  * @brief  SPI Write a byte to device
-  * @param  DataIn: value to be written
-  * @param  DataOut: read value
-  * @param  DataLength: value data length
-  * @retval None
-  */
-static void SPIx_WriteReadData(const uint8_t *DataIn, uint8_t *DataOut, uint16_t DataLength)
-{
-  HAL_StatusTypeDef status = HAL_OK;
-
-  status = HAL_SPI_TransmitReceive(&hnucleo_Spi, (uint8_t*) DataIn, DataOut, DataLength, SpixTimeout);
-
-  /* Check the communication status */
-  if(status != HAL_OK)
-  {
-    /* Execute user timeout callback */
-    SPIx_Error();
-  }
-}
-
-/**
-  * @brief  SPI Write an amount of data to device
-  * @param  DataIn: value to be written
-  * @param  DataLength: number of bytes to write
-  * @retval None
-  */
-static void SPIx_WriteData(uint8_t *DataIn, uint16_t DataLength)
-{
-  HAL_StatusTypeDef status = HAL_OK;
-
-  status = HAL_SPI_Transmit(&hnucleo_Spi, DataIn, DataLength, SpixTimeout);
-
-  /* Check the communication status */
-  if(status != HAL_OK)
-  {
-    /* Execute user timeout callback */
-    SPIx_Error();
-  }
-}
-
-/**
-  * @brief  SPI Write a byte to device
-  * @param  Value: value to be written
-  * @retval None
-  */
-static void SPIx_Write(uint8_t Value)
-{
-  HAL_StatusTypeDef status = HAL_OK;
-  uint8_t data;
-
-  status = HAL_SPI_TransmitReceive(&hnucleo_Spi, (uint8_t*) &Value, &data, 1, SpixTimeout);
-
-  /* Check the communication status */
-  if(status != HAL_OK)
-  {
-    /* Execute user timeout callback */
-    SPIx_Error();
-  }
-}
-
-/**
-  * @brief  SPI error treatment function
-  * @retval None
-  */
-static void SPIx_Error (void)
-{
-  /* De-initialize the SPI communication BUS */
-  HAL_SPI_DeInit(&hnucleo_Spi);
-
-  /* Re-Initiaize the SPI communication BUS */
-  SPIx_Init();
-}
 
 /******************************************************************************
                             LINK OPERATIONS
@@ -183,29 +127,7 @@ static void SPIx_Error (void)
   */
 void SD_IO_Init(void)
 {
-  GPIO_InitTypeDef  gpioinitstruct = {0};
   uint8_t counter = 0;
-
-  /* SD_CS_PIN and LCD_CS_PIN Periph clock enable */
-  SD_CS_GPIO_CLK_ENABLE();
-  LCD_CS_GPIO_CLK_ENABLE();
-
-  /* Set chip selects to high before IO init in order to be sure no transition to 0 occurs */
-  SD_CS_HIGH();
-
-  /* Configure SD_CS_PIN pin: SD Card CS pin */
-  gpioinitstruct.Pin = SD_CS_PIN;
-  gpioinitstruct.Mode = GPIO_MODE_OUTPUT_PP;
-  gpioinitstruct.Pull = GPIO_PULLUP;
-  gpioinitstruct.Speed = GPIO_SPEED_FREQ_VERY_HIGH;
-  HAL_GPIO_Init(SD_CS_GPIO_PORT, &gpioinitstruct);
-
-  /* Configure LCD_CS_PIN pin: LCD CS pin */
-  gpioinitstruct.Pin   = LCD_CS_PIN;
-  HAL_GPIO_Init(SD_CS_GPIO_PORT, &gpioinitstruct);
-
-  /* SD SPI Config */
-  SPIx_Init();
 
   /* Send dummy byte 0xFF, 10 times with CS high */
   /* Rise CS and MOSI for 80 clocks cycles */
@@ -225,11 +147,11 @@ void SD_IO_CSState(uint8_t val)
 {
   if(val == 1)
   {
-    SD_CS_HIGH();
+    SPIx_CS_High(&card_setup);
   }
   else
   {
-    SD_CS_LOW();
+    SPIx_CS_Low(&card_setup);
   }
 }
 
@@ -243,7 +165,7 @@ void SD_IO_CSState(uint8_t val)
 void SD_IO_WriteReadData(const uint8_t *DataIn, uint8_t *DataOut, uint16_t DataLength)
 {
   /* Send the byte */
-  SPIx_WriteReadData(DataIn, DataOut, DataLength);
+  SPIx_WriteReadData(&card_setup, DataIn, DataOut, DataLength);
 }
 
 /**
@@ -256,7 +178,7 @@ uint8_t SD_IO_WriteByte(uint8_t Data)
   uint8_t tmp;
 
   /* Send the byte */
-  SPIx_WriteReadData(&Data,&tmp,1);
+  SPIx_WriteReadData(&card_setup, &Data,&tmp,1);
   return tmp;
   }
 
@@ -281,7 +203,7 @@ void SD_IO_ReadData(uint8_t *DataOut, uint16_t DataLength)
 void SD_IO_WriteData(const uint8_t *Data, uint16_t DataLength)
 {
   /* Send the byte */
-  SPIx_WriteData((uint8_t *)Data, DataLength);
+  SPIx_WriteData(&card_setup, (uint8_t *)Data, DataLength);
 }
 
 #endif /* HAL_SPI_MODULE_ENABLED */

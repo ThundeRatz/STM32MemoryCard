@@ -33,13 +33,11 @@
   * @{
   */
 
-/** @defgroup SD_IO_LINK STM32G0XX-NUCLEO
+/** @defgroup SD_IO_LINK
   * @{
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32g0xx_hal.h"
-
 
 /** @defgroup SD_IO_LINK_Exported_Constants Exported Constants
   * @{
@@ -52,46 +50,20 @@
  #define USE_SD_IO_LINK
 #endif
 
-/** @defgroup SD_IO_LINK_BUS BUS Constants
+/** @defgroup SD_IO_LINK_Exported_Functions
   * @{
   */
-/*###################### SPI1 ###################################*/
-#define NUCLEO_SPIx                                 SPI1
-#define NUCLEO_SPIx_CLK_ENABLE()                  __HAL_RCC_SPI1_CLK_ENABLE()
-
-#define NUCLEO_SPIx_SCK_AF                          GPIO_AF0_SPI1
-#define NUCLEO_SPIx_SCK_GPIO_PORT                   GPIOA
-#define NUCLEO_SPIx_SCK_PIN                         GPIO_PIN_5
-#define NUCLEO_SPIx_SCK_GPIO_CLK_ENABLE()         __HAL_RCC_GPIOA_CLK_ENABLE()
-#define NUCLEO_SPIx_SCK_GPIO_CLK_DISABLE()        __HAL_RCC_GPIOA_CLK_DISABLE()
-
-#define NUCLEO_SPIx_MISO_MOSI_AF                    GPIO_AF0_SPI1
-#define NUCLEO_SPIx_MISO_MOSI_GPIO_PORT             GPIOA
-#define NUCLEO_SPIx_MISO_MOSI_GPIO_CLK_ENABLE()   __HAL_RCC_GPIOA_CLK_ENABLE()
-#define NUCLEO_SPIx_MISO_MOSI_GPIO_CLK_DISABLE()  __HAL_RCC_GPIOA_CLK_DISABLE()
-#define NUCLEO_SPIx_MISO_PIN                        GPIO_PIN_6
-#define NUCLEO_SPIx_MOSI_PIN                        GPIO_PIN_7
-/* Maximum Timeout values for flags waiting loops. These timeouts are not based
-   on accurate values, they just guarantee that the application will not remain
-   stuck if the SPI communication is corrupted.
-   You may modify these timeout values depending on CPU frequency and application
-   conditions (interrupts routines ...). */
-#define NUCLEO_SPIx_TIMEOUT_MAX                   1000
-
 
 /**
-  * @brief  SD Control Lines management
-  */
-#define SD_CS_LOW()       HAL_GPIO_WritePin(SD_CS_GPIO_PORT, SD_CS_PIN, GPIO_PIN_RESET)
-#define SD_CS_HIGH()      HAL_GPIO_WritePin(SD_CS_GPIO_PORT, SD_CS_PIN, GPIO_PIN_SET)
-
-/**
-  * @brief  SD Control Interface pins (shield D4)
-  */
-#define SD_CS_PIN                                 GPIO_PIN_5
-#define SD_CS_GPIO_PORT                           GPIOB
-#define SD_CS_GPIO_CLK_ENABLE()                 __HAL_RCC_GPIOB_CLK_ENABLE()
-#define SD_CS_GPIO_CLK_DISABLE()                __HAL_RCC_GPIOB_CLK_DISABLE()
+ * @brief Initialize memory card platform.
+ *        This function is used for the user to define which
+ *        SPI instance and CS pin are being used.
+ *
+ * @param hspi SPI instance handler
+ * @param cs_port Chip select port
+ * @param cs_pin Chip select pin number
+ */
+void mem_card_init(SPI_HandleTypeDef* hspi, GPIO_TypeDef* cs_port, uint16_t cs_pin);
 
 /**
   * @}
