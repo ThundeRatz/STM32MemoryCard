@@ -1,9 +1,9 @@
 /**
   ******************************************************************************
-  * @file    stm32_adafruit_sd.h
+  * @file    bsp_sd_card.h
   * @author  MCD Application Team
   * @brief   This file contains the common defines and functions prototypes for
-  *          the stm32_adafruit_sd.c driver.
+  *          the bsp_sd_card.c driver.
   ******************************************************************************
   * @attention
   *
@@ -19,8 +19,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32_ADAFRUIT_SD_H
-#define __STM32_ADAFRUIT_SD_H
+#ifndef __BSP_SD_CARD_H
+#define __BSP_SD_CARD_H
 
 #ifdef __cplusplus
  extern "C" {
@@ -34,15 +34,15 @@
   */
 #define __IO    volatile
 
-/** @addtogroup STM32_ADAFRUIT
+/** @addtogroup BSP_SD_CARD
   * @{
   */
 
-/** @defgroup STM32_ADAFRUIT_SD
+/** @defgroup BSP_SD_CARD
   * @{
   */
 
-/** @defgroup STM32_ADAFRUIT_SD_Exported_Types
+/** @defgroup BSP_SD_CARD_Exported_Types
   * @{
   */
 
@@ -153,7 +153,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup STM32_ADAFRUIT_SPI_SD_Exported_Constants
+/** @defgroup BSP_SD_CARD_SPI_SD_Exported_Constants
   * @{
   */
 
@@ -179,7 +179,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup STM32_ADAFRUIT_SD_Exported_Macro
+/** @defgroup BSP_SD_CARD_Exported_Macro
   * @{
   */
 
@@ -187,7 +187,7 @@ typedef struct
   * @}
   */
 
-/** @defgroup STM32_ADAFRUIT_SD_Exported_Functions
+/** @defgroup BSP_SD_CARD_Exported_Functions
   * @{
   */
 uint8_t BSP_SD_Init(void);
@@ -210,7 +210,7 @@ void HAL_Delay(__IO uint32_t Delay);
 }
 #endif
 
-#endif /* __STM32_ADAFRUIT_SD_H */
+#endif /* __BSP_SD_CARD_H */
 
 /**
   * @}

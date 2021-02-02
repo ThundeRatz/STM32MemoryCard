@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    stm32_adafruit_sd.c
+  * @file    bsp_sd_card.c
   * @author  MCD Application Team
   * @brief   This file provides a set of functions needed to manage the SD card
   *          mounted on the Adafruit 1.8" TFT LCD shield (reference ID 802),
@@ -69,7 +69,7 @@
 ------------------------------------------------------------------------------*/
 
 /* Includes ------------------------------------------------------------------*/
-#include "stm32_adafruit_sd.h"
+#include "bsp_sd_card.h"
 #include "stdlib.h"
 #include "string.h"
 #include "stdio.h"
@@ -78,17 +78,17 @@
   * @{
   */
 
-/** @addtogroup STM32_ADAFRUIT
+/** @addtogroup BSP_SD_CARD
   * @{
   */
 
-/** @defgroup STM32_ADAFRUIT_SD
+/** @defgroup BSP_SD_CARD
   * @{
   */
 
 /* Private typedef -----------------------------------------------------------*/
 
-/** @defgroup STM32_ADAFRUIT_SD_Private_Types_Definitions
+/** @defgroup BSP_SD_CARD_Private_Types_Definitions
   * @{
   */
 typedef struct {
@@ -105,7 +105,7 @@ typedef struct {
 
 /* Private define ------------------------------------------------------------*/
 
-/** @defgroup STM32_ADAFRUIT_SD_Private_Defines
+/** @defgroup BSP_SD_CARD_Private_Defines
   * @{
   */
 #define SD_DUMMY_BYTE            0xFF
@@ -214,7 +214,7 @@ typedef enum
 
 /* Private macro -------------------------------------------------------------*/
 
-/** @defgroup STM32_ADAFRUIT_SD_Private_Macros
+/** @defgroup BSP_SD_CARD_Private_Macros
   * @{
   */
 
@@ -224,7 +224,7 @@ typedef enum
 
 /* Private variables ---------------------------------------------------------*/
 
-/** @defgroup STM32_ADAFRUIT_SD_Private_Variables
+/** @defgroup BSP_SD_CARD_Private_Variables
   * @{
   */
 __IO uint8_t SdStatus = SD_NOT_PRESENT;
@@ -247,7 +247,7 @@ static uint8_t SD_GoIdleState(void);
 static SD_CmdAnswer_typedef SD_SendCmd(uint8_t Cmd, uint32_t Arg, uint8_t Crc, uint8_t Answer);
 static uint8_t SD_WaitData(uint8_t data);
 static uint8_t SD_ReadData(void);
-/** @defgroup STM32_ADAFRUIT_SD_Private_Function_Prototypes
+/** @defgroup BSP_SD_CARD_Private_Function_Prototypes
   * @{
   */
 /**
@@ -256,7 +256,7 @@ static uint8_t SD_ReadData(void);
 
 /* Private functions ---------------------------------------------------------*/
 
-/** @defgroup STM32_ADAFRUIT_SD_Private_Functions
+/** @defgroup BSP_SD_CARD_Private_Functions
   * @{
   */
 
