@@ -104,7 +104,7 @@ APP_FATFS_SPI_Init(&hspi1, GPIOA, GPIO_PIN_10);
 
 Note that the SPI and GPIO must have already been initialized before this function call.
 
-The `app_fatfs_spi.h` header already includes the necessary files for the user to access FAT volumes. All functions available for handling FAT volumes are listed on page 13 of the[ST`s FATFS User Manual](docs/dm00105259-developing-applications-on-stm32cube-with-fatfs-stmicroelectronics.pdf).
+The `app_fatfs_spi.h` header already includes the necessary files for the user to access FAT volumes. All functions available for handling FAT volumes are listed on page 13 of the [ST`s FATFS User Manual](docs/dm00105259-developing-applications-on-stm32cube-with-fatfs-stmicroelectronics.pdf).
 
 An example code can be found [here](https://github.com/LucasHaug/SDCardTest).
 
